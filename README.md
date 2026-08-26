@@ -71,7 +71,7 @@ Vercel 路由不依赖本机字体，而是按当前卡片实际字符请求 Not
   30–42 KB；保留并提交。
 - `public/og-assets/server-logo-128.png`：卡片品牌图标；保留并提交。
 - `public/fallback.png`：生成失败时使用的站点默认图；保留并提交。
-- `public/og-assets/mock-avatar-256.jpg`：头像不可用时的回退与本地 mock 夹具；保留并提交。
+- `public/og-assets/mascot-avatar-256.png`：主站看板娘头像，作者头像不可用时作为回退；保留并提交。
 - `output/`：可重复生成的 PNG/SVG，当前约 119 MB；只保留在本地，不提交。
 
 原始高分辨率 PNG 背景仍属于论坛前端设计资产，不复制到本服务。
