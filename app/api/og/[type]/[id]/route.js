@@ -61,7 +61,13 @@ export async function GET(request, context) {
     return new ImageResponse(prepared.element, {
       width: WIDTH,
       height: HEIGHT,
-      fonts: [{ name: 'Odysseia Sans', data: prepared.fontData, weight: 400, style: 'normal' }],
+      emoji: 'twemoji',
+      fonts: [
+        { name: 'Odysseia Sans', data: prepared.fontData, weight: 400, style: 'normal' },
+        ...(prepared.mathFontData
+          ? [{ name: 'Odysseia Math', data: prepared.mathFontData, weight: 400, style: 'normal' }]
+          : []),
+      ],
       headers: {
         'Cache-Control': versioned
           ? 'public, max-age=31536000, s-maxage=31536000, immutable'

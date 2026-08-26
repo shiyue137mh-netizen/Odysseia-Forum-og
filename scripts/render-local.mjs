@@ -19,6 +19,10 @@ import {
 const PROJECT_ROOT = resolve(import.meta.dirname, '..');
 const OUTPUT_DIR = resolve(PROJECT_ROOT, 'output');
 const FONT_PATH = process.env.OG_FONT_PATH || '/System/Library/Fonts/Supplemental/Arial Unicode.ttf';
+const requestedScale = Number(process.env.OG_RENDER_SCALE || 1);
+const renderScale = Number.isFinite(requestedScale) && requestedScale >= 1 && requestedScale <= 2
+  ? requestedScale
+  : 1;
 
 function assertPng(buffer, name, width = WIDTH, height = HEIGHT) {
   if (buffer.subarray(0, 8).toString('hex') !== '89504e470d0a1a0a') {
@@ -58,9 +62,9 @@ const [fontData, images] = await Promise.all([readFile(FONT_PATH), loadBaseImage
 await mkdir(OUTPUT_DIR, { recursive: true });
 
 for (const [name, data] of Object.entries(mockData)) {
-  await renderImage(name, data, images, fontData);
+  await renderImage(name, data, images, fontData, renderScale);
 }
-await renderImage('author', mockData.author, images, fontData, 2);
+if (!process.env.OG_RENDER_SCALE) await renderImage('author', mockData.author, images, fontData, 2);
 
 if (!process.env.OG_SERVICE_TOKEN) {
   console.warn('skipped live metadata: OG_SERVICE_TOKEN is missing');
