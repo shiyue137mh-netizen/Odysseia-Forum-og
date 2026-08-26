@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og';
+import { createElement as h } from 'react';
 
-import { HEIGHT, WIDTH, prepareOgImage } from '../../../../../lib/renderer.mjs';
+import { HEIGHT, OUTPUT_SCALE, WIDTH, prepareOgImage } from '../../../../../lib/renderer.mjs';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -58,9 +59,27 @@ export async function GET(request, context) {
     if (!prepared) return fallbackResponse(request, 'not-found');
 
     const versioned = new URL(request.url).searchParams.has('v');
-    return new ImageResponse(prepared.element, {
-      width: WIDTH,
-      height: HEIGHT,
+    const scaledElement = h('div', {
+      style: {
+        display: 'flex',
+        width: WIDTH * OUTPUT_SCALE,
+        height: HEIGHT * OUTPUT_SCALE,
+        overflow: 'hidden',
+      },
+    }, h('div', {
+      style: {
+        display: 'flex',
+        width: WIDTH,
+        height: HEIGHT,
+        flexShrink: 0,
+        transform: `scale(${OUTPUT_SCALE})`,
+        transformOrigin: 'top left',
+      },
+    }, prepared.element));
+
+    return new ImageResponse(scaledElement, {
+      width: WIDTH * OUTPUT_SCALE,
+      height: HEIGHT * OUTPUT_SCALE,
       fonts: [{ name: 'Odysseia Sans', data: prepared.fontData, weight: 400, style: 'normal' }],
       headers: {
         'Cache-Control': versioned

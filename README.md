@@ -1,7 +1,7 @@
 # Odysseia Forum OG Service
 
-类脑索引的独立 Open Graph 图片生成服务。项目部署在 Vercel，仅生成 `1200×630`
-PNG；论坛 React SPA 和 `/share/...` HTML 仍由 Cloudflare Pages 提供。
+类脑索引的独立 Open Graph 图片生成服务。项目部署在 Vercel，以 `1200×630` 逻辑布局生成
+`2400×1260` 的 2× PNG；论坛 React SPA 和 `/share/...` HTML 仍由 Cloudflare Pages提供。
 
 ## 请求链
 
