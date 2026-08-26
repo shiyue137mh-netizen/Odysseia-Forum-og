@@ -1,6 +1,5 @@
-import { ImageResponse } from 'next/og';
-
-import { HEIGHT, WIDTH, prepareOgImage } from '../../../../../lib/renderer.mjs';
+import { renderPng } from '../../../../../lib/render-png.mjs';
+import { prepareOgImage } from '../../../../../lib/renderer.mjs';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -58,24 +57,12 @@ export async function GET(request, context) {
     if (!prepared) return fallbackResponse(request, 'not-found');
 
     const versioned = new URL(request.url).searchParams.has('v');
-    return new ImageResponse(prepared.element, {
-      width: WIDTH,
-      height: HEIGHT,
-      emoji: 'twemoji',
-      fonts: [
-        { name: 'Odysseia Sans', data: prepared.fontData, weight: 400, style: 'normal' },
-        ...(prepared.mathFontData
-          ? [{ name: 'Odysseia Math', data: prepared.mathFontData, weight: 400, style: 'normal' }]
-          : []),
-      ],
-      headers: {
-        'Cache-Control': versioned
+    return imageResponse(
+      await renderPng(prepared.element, prepared.fontData, prepared.mathFontData),
+      versioned
           ? 'public, max-age=31536000, s-maxage=31536000, immutable'
           : 'public, max-age=300, s-maxage=86400, stale-while-revalidate=604800',
-        'X-Content-Type-Options': 'nosniff',
-        'X-Robots-Tag': 'noindex',
-      },
-    });
+    );
   } catch (error) {
     console.error('OG 图片生成失败', {
       type,
